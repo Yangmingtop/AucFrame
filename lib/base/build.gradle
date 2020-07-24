@@ -1,0 +1,11 @@
+apply {
+    from "${project.rootDir.path}/buildLib.gradle"
+}
+
+//dependencies {
+//    implementation(Dependencies.kotlinStdlib)
+//    implementation(Dependencies.kotlinCore)
+//    implementation(Dependencies.appcompatX)
+//    implementation(Dependencies.androidxJunit)
+//    implementation(Dependencies.espressoCore)
+//}

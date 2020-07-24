@@ -1,0 +1,54 @@
+GLog.d(project.toString() + " -> app")
+apply {
+    plugin "com.android.application"
+    plugin "kotlin-android"
+    plugin "kotlin-android-extensions"
+}
+
+android {
+    compileSdkVersion Versions.compileSdkVersion
+    buildToolsVersion Versions.buildToolsVersion
+    defaultConfig {
+        minSdkVersion Versions.minSdkVersion
+        versionCode Versions.versionCode
+        versionName Versions.versionName
+        applicationId Versions.applicationId + suffix
+        targetSdkVersion Versions.targetSdkVersion
+        multiDexEnabled true
+        resValue "string", "app_name", Versions.appName + suffix
+    }
+
+    buildTypes {
+        debug {
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+        }
+        release {
+            minifyEnabled true
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+        }
+    }
+
+    packagingOptions {
+        exclude 'META-INF/*'
+    }
+
+    dexOptions {
+        preDexLibraries true
+        javaMaxHeapSize "8g"
+        maxProcessCount 8
+        dexInProcess = true
+    }
+}
+
+dependencies {
+    // LeakCanary
+    debugImplementation Dependencies.leakcanaryAndroid
+    // debugImplementation Config.depConfig.leakcanary.support_fragment
+    releaseImplementation Dependencies.leakcanaryAndroid_no_op
+}
+
+def getSuffix() {
+    if (project.path == ":feature:launcher:app") return ""
+    return project.path.replace(":", "_").substring(":feature".length(), project.path.length() - ":app".length())
+}
